@@ -1,1 +1,51 @@
-<p>home works!</p>
+<div class="container pt-4">
+    <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-8 col-lg-6">
+            <div class="row mb-2">
+                <div class="col-sm-4">
+                    <label for="date">Date de sortie</label>
+                </div>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input type="text" [minDate]="minDate" [(ngModel)]="outingDate" [maxDate]="maxDate" class="form-control" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" />
+                        <button class="btn btn-primary" (click)="setDateToToday()" type="button">Aujourd'hui</button>
+                        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
+		            </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-4">
+                    <label for="">Nom de l'âme</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-4">
+                    <label for="">Situation</label>
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-control" name="" id="">
+                        <option value="">Incroyant</option>
+                        <option value="">Religieux</option>
+                        <option value="">Chrétien retrograde</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <label for="">Détails</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea name="" id="" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="text-end">
+                <button class="btn btn-primary" type="submit">Envoyer</button>
+            </div>
+        </div>
+    </div>
+</div>
