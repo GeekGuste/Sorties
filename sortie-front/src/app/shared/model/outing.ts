@@ -4,7 +4,7 @@ export interface Outing {
 }
 
 export interface OutingDeclaration {
-    id: number;
+    id?: number;
     date: Date;
     name: string;
     situation: string;

@@ -5,6 +5,8 @@ import { FormGroup, ReactiveFormsModule, FormsModule, FormBuilder, Validators } 
 import { JsonPipe } from '@angular/common';
 import { FrenchDatepickerI18nService, I18n } from '../shared/service/french-datepicker-i18n.service';
 import { NgbDateFrenchParserFormatter } from '../shared/service/ngb-date-french-parser-formatter.service';
+import { SITUATION_OPTIONS } from '../shared/model/data';
+import { OutingDeclaration } from '../shared/model/outing';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +27,9 @@ export class HomeComponent {
   outingDate: NgbDateStruct;
   todayDatePicker: NgbDateStruct;
   outingDeclarationForm!: FormGroup;
+  SITUATION_OPTIONS = SITUATION_OPTIONS;
+
+  currentOutingDeclarations: OutingDeclaration[] = [];
 
   constructor(private formBuilder: FormBuilder) {
     this.today = new Date();
@@ -35,21 +40,31 @@ export class HomeComponent {
   }
 
   ngOnInit(){
-    //this.outingDeclarationForm = this.qcs
     this.outingDeclarationForm = this.formBuilder.group({
-      id: [""],
-      date: [""],
+      date: [this.todayDatePicker, [Validators.required]],
       name: ["", [Validators.required, Validators.maxLength(20)]],
       situation: ["", [Validators.required]],
       details: [""]
     });
+    this.setDateToToday();
   }
 
-  onDateSelect(): void {
-
+  onDateSelect($event: NgbDate): void {
+    this.outingDeclarationForm.patchValue({ date: $event });
   }
 
   setDateToToday(): void {
-    this.outingDate = this.todayDatePicker;
+    this.outingDeclarationForm.patchValue({ date: this.todayDatePicker });
+  }
+
+  onSubmit(){
+    const payload = this.outingDeclarationForm.getRawValue();
+    this.currentOutingDeclarations.push({
+      date: new Date(payload.date.year, payload.date.month - 1, payload.date.day),
+      name: payload.name,
+      details: payload.details,
+      situation: payload.situation
+    });
+    this.outingDeclarationForm.patchValue({name: "", details: "", situation: ""});
   }
 }

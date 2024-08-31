@@ -1,51 +1,81 @@
 <div class="container pt-4">
     <div class="row justify-content-center">
-        <div class="col-sm-10 col-md-8 col-lg-6">
-            <div class="row mb-2">
-                <div class="col-sm-4">
-                    <label for="date">Date de sortie</label>
-                </div>
-                <div class="col-sm-8">
-                    <div class="input-group">
-                        <input type="text" [minDate]="minDate" [(ngModel)]="outingDate" [maxDate]="maxDate" class="form-control" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" />
-                        <button class="btn btn-primary" (click)="setDateToToday()" type="button">Aujourd'hui</button>
-                        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
-		            </div>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-4">
-                    <label for="">Nom de l'âme</label>
-                </div>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-4">
-                    <label for="">Situation</label>
-                </div>
-                <div class="col-sm-8">
-                    <select class="form-control" name="" id="">
-                        <option value="">Incroyant</option>
-                        <option value="">Religieux</option>
-                        <option value="">Chrétien retrograde</option>
-                    </select>
-                </div>
-            </div>
-            <div>
+        <form [formGroup]="outingDeclarationForm" (ngSubmit)="onSubmit()">
+            <div class="col-sm-10 col-md-8 col-lg-6">
                 <div class="row mb-2">
                     <div class="col-sm-4">
-                        <label for="">Détails</label>
+                        <label for="date">Date de sortie *</label>
                     </div>
                     <div class="col-sm-8">
-                        <textarea name="" id="" class="form-control"></textarea>
+                        <div class="input-group">
+                            <input type="text" [minDate]="minDate" readonly formControlName="date" (dateSelect)="onDateSelect($event)" [maxDate]="maxDate" class="form-control" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" />
+                            <button class="btn btn-primary" (click)="setDateToToday()" type="button">Aujourd'hui</button>
+                            <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
+                        </div>
                     </div>
                 </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <label for="name">Nom de l'âme *</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" name="name" formControlName="name" class="form-control" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <label for="situation">Situation *</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <select class="form-control" formControlName="situation" name="situation" id="">
+                            @for (situationOption of SITUATION_OPTIONS; track $index) {
+                                <option value="{{ situationOption.value }}">{{ situationOption.texte }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="row mb-2">
+                        <div class="col-sm-4">
+                            <label for="details">Détails</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <textarea name="details" id="details" formControlName="details" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-primary" [disabled]="!outingDeclarationForm.valid" type="submit">Envoyer</button>
+                </div>
             </div>
-            <div class="text-end">
-                <button class="btn btn-primary" type="submit">Envoyer</button>
-            </div>
-        </div>
+        </form>
+    </div>
+    <div class="row mt-5">
+        <br>
+        <hr>
+        <br>
+        <h4 class="text-center">Statistiques du jour sélectionné</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Situation</th>
+                    <th scope="col">Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (outingDeclaration of currentOutingDeclarations; track $index; let i = $index) {
+                    <tr>
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td>
+                            {{ outingDeclaration.name }}
+                        </td>
+                        <td>{{ outingDeclaration.situation }}</td>
+                        <td>{{ outingDeclaration.details }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
