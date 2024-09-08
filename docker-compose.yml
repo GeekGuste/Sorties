@@ -1,0 +1,38 @@
+services:
+  mysqldb:
+    image: mysql:8.4
+    container_name: mysqlcontainer
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - 3307:3306
+    expose:
+      - 3307
+    environment:
+      - MYSQL_DATABASE=sortie
+      - MYSQL_USER=sortie-user
+      - MYSQL_PASSWORD=thisimyssortiepassword
+      - MYSQL_ROOT_PASSWORD=mysql@root@password
+    networks:
+      - sortie-network
+
+  sortieback:
+    container_name: sortiebackcontainer
+    build: ./sortie-back
+    restart: unless-stopped
+    env_file: ./sortie-back/.env
+    depends_on:
+      - mysqldb
+    ports:
+      - 3001:3000
+    expose:
+      - 3001
+    networks:
+      - sortie-network
+volumes:
+  mysql-data:
+
+networks:
+  sortie-network:
+    driver: bridge
